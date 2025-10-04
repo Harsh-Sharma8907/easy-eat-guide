@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Upload, X } from 'lucide-react';
+import { Camera, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -12,6 +12,7 @@ interface ImageUploadProps {
 export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUploadProps) => {
   const [preview, setPreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = (file: File) => {
     onImageSelect(file);
@@ -26,6 +27,7 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
     setPreview(null);
     onClear();
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (cameraInputRef.current) cameraInputRef.current.value = '';
   };
 
   return (
@@ -40,21 +42,44 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
               </p>
             </div>
 
-            <Button
-              variant="hero"
-              size="lg"
-              className="w-full"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="mr-2 h-5 w-5" />
-              Upload Image
-            </Button>
+            <div className="flex flex-col gap-3">
+              <Button
+                variant="hero"
+                size="lg"
+                className="w-full"
+                onClick={() => cameraInputRef.current?.click()}
+              >
+                <Camera className="mr-2 h-5 w-5" />
+                Take Photo
+              </Button>
+
+              <Button
+                variant="outline"
+                size="lg"
+                className="w-full"
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload className="mr-2 h-5 w-5" />
+                Upload Image
+              </Button>
+            </div>
+
+            <input
+              ref={cameraInputRef}
+              type="file"
+              accept="image/*"
+              capture="environment"
+              className="hidden"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) handleFileSelect(file);
+              }}
+            />
 
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
-              capture="environment"
               className="hidden"
               onChange={(e) => {
                 const file = e.target.files?.[0];
