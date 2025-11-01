@@ -33,7 +33,7 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
   return (
     <div className="w-full max-w-md mx-auto">
       {!preview ? (
-        <Card className="p-8 border-2 border-dashed border-border hover:border-primary transition-smooth">
+        <Card className="p-8 border-2 border-dashed border-border hover:border-primary transition-smooth shadow-card animate-scale-in">
           <div className="space-y-4">
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-2">Upload Ingredient List</h3>
@@ -46,7 +46,7 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
               <Button
                 variant="hero"
                 size="lg"
-                className="w-full"
+                className="w-full hover-scale shadow-soft"
                 onClick={() => cameraInputRef.current?.click()}
               >
                 <Camera className="mr-2 h-5 w-5" />
@@ -56,7 +56,7 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full"
+                className="w-full hover-scale shadow-soft"
                 onClick={() => fileInputRef.current?.click()}
               >
                 <Upload className="mr-2 h-5 w-5" />
@@ -89,17 +89,17 @@ export const ImageUpload = ({ onImageSelect, selectedImage, onClear }: ImageUplo
           </div>
         </Card>
       ) : (
-        <Card className="p-4 shadow-card">
+        <Card className="p-4 shadow-elegant animate-scale-in">
           <div className="relative">
             <img
               src={preview}
               alt="Selected ingredient list"
-              className="w-full h-auto rounded-lg"
+              className="w-full h-auto rounded-lg shadow-soft"
             />
             <Button
               variant="destructive"
               size="sm"
-              className="absolute top-2 right-2"
+              className="absolute top-2 right-2 shadow-soft hover-scale"
               onClick={handleClear}
             >
               <X className="h-4 w-4" />

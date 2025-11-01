@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Leaf, Loader2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { IngredientResults, Ingredient } from '@/components/IngredientResults';
+import { ThemeToggle } from '@/components/ThemeToggle';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -65,13 +66,16 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-gradient-hero animate-fade-in">
       {/* Header */}
-      <header className="border-b bg-card/50 backdrop-blur-sm">
+      <header className="border-b bg-card/50 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-2">
-            <Leaf className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl font-bold">EatWise</h1>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Leaf className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl font-bold">EatWise</h1>
+            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -79,10 +83,12 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {!results ? (
-          <div className="space-y-8">
+          <div className="space-y-8 animate-fade-in">
             {/* Hero Section */}
             <div className="text-center space-y-4 max-w-2xl mx-auto">
-              <h2 className="text-4xl font-bold">Know What You're Eating</h2>
+              <h2 className="text-4xl font-bold bg-gradient-primary bg-clip-text text-transparent animate-scale-in">
+                Know What You're Eating
+              </h2>
               <p className="text-lg text-muted-foreground">
                 Upload a photo of any ingredient list and get instant AI-powered insights about what's
                 healthy and what to avoid
@@ -98,13 +104,13 @@ const Index = () => {
 
             {/* Analyze Button */}
             {selectedImage && (
-              <div className="flex justify-center">
+              <div className="flex justify-center animate-scale-in">
                 <Button
                   variant="hero"
                   size="lg"
                   onClick={analyzeIngredients}
                   disabled={isAnalyzing}
-                  className="min-w-[200px]"
+                  className="min-w-[200px] shadow-elegant hover-scale"
                 >
                   {isAnalyzing ? (
                     <>
@@ -119,10 +125,15 @@ const Index = () => {
             )}
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in">
             <IngredientResults ingredients={results} />
             <div className="flex justify-center">
-              <Button variant="outline" size="lg" onClick={handleReset}>
+              <Button 
+                variant="outline" 
+                size="lg" 
+                onClick={handleReset}
+                className="shadow-soft hover-scale"
+              >
                 Analyze Another Product
               </Button>
             </div>

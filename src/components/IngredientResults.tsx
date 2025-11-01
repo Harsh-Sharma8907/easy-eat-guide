@@ -17,8 +17,8 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
   const badIngredients = ingredients.filter((ing) => ing.status === 'bad');
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
-      <div className="text-center">
+    <div className="w-full max-w-4xl mx-auto space-y-6 animate-fade-in">
+      <div className="text-center animate-scale-in">
         <h2 className="text-2xl font-bold mb-2">Analysis Results</h2>
         <p className="text-muted-foreground">
           {goodIngredients.length} good • {badIngredients.length} concerning
@@ -27,7 +27,7 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
 
       <div className="grid md:grid-cols-2 gap-6">
         {/* Good Ingredients */}
-        <Card className="p-6 bg-success-light border-success/20">
+        <Card className="p-6 bg-success-light border-success/20 shadow-card hover-scale transition-smooth">
           <div className="flex items-center gap-2 mb-4">
             <CheckCircle2 className="h-5 w-5 text-success" />
             <h3 className="text-lg font-semibold text-success">Good Ingredients</h3>
@@ -37,7 +37,7 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
               goodIngredients.map((ingredient, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-2 p-3 bg-card rounded-lg border border-success/10"
+                  className="flex items-start gap-2 p-3 bg-card rounded-lg border border-success/10 shadow-soft hover:shadow-card transition-smooth"
                 >
                   <CheckCircle2 className="h-4 w-4 text-success mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
@@ -63,7 +63,7 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
         </Card>
 
         {/* Bad Ingredients */}
-        <Card className="p-6 bg-warning-light border-warning/20">
+        <Card className="p-6 bg-warning-light border-warning/20 shadow-card hover-scale transition-smooth">
           <div className="flex items-center gap-2 mb-4">
             <AlertTriangle className="h-5 w-5 text-warning" />
             <h3 className="text-lg font-semibold text-warning">Concerning Ingredients</h3>
@@ -73,7 +73,7 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
               badIngredients.map((ingredient, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-2 p-3 bg-card rounded-lg border border-warning/10"
+                  className="flex items-start gap-2 p-3 bg-card rounded-lg border border-warning/10 shadow-soft hover:shadow-card transition-smooth"
                 >
                   <AlertTriangle className="h-4 w-4 text-warning mt-0.5 flex-shrink-0" />
                   <div className="flex-1 min-w-0">
