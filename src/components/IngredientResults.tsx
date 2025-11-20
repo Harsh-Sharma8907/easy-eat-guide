@@ -14,9 +14,10 @@ export interface Ingredient {
 
 interface IngredientResultsProps {
   ingredients: Ingredient[];
+  speakingEnabled?: boolean;
 }
 
-export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
+export const IngredientResults = ({ ingredients, speakingEnabled = true }: IngredientResultsProps) => {
   const { toast } = useToast();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const goodIngredients = ingredients.filter((ing) => ing.status === 'good');
@@ -63,6 +64,8 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
 
   // Auto-speak when results appear
   useEffect(() => {
+    if (!speakingEnabled) return;
+    
     const autoSpeak = async () => {
       try {
         const speechText = generateSpeechText();
@@ -75,7 +78,7 @@ export const IngredientResults = ({ ingredients }: IngredientResultsProps) => {
     autoSpeak();
     
     return () => stopSpeaking();
-  }, []);
+  }, [speakingEnabled]);
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6 animate-fade-in">
