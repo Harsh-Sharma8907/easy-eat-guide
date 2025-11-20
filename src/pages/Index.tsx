@@ -3,6 +3,7 @@ import { Leaf, Loader2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { IngredientResults, Ingredient } from '@/components/IngredientResults';
 import { ThemeToggle } from '@/components/ThemeToggle';
+import { SpeakingToggle } from '@/components/SpeakingToggle';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,6 +12,7 @@ const Index = () => {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<Ingredient[] | null>(null);
+  const [speakingEnabled, setSpeakingEnabled] = useState(true);
   const { toast } = useToast();
 
   const analyzeIngredients = async () => {
@@ -75,7 +77,13 @@ const Index = () => {
               <Leaf className="h-6 w-6 text-primary" />
               <h1 className="text-2xl font-bold">EatWise</h1>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <SpeakingToggle 
+                enabled={speakingEnabled} 
+                onToggle={() => setSpeakingEnabled(!speakingEnabled)} 
+              />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>
@@ -126,7 +134,7 @@ const Index = () => {
           </div>
         ) : (
           <div className="space-y-6 animate-fade-in">
-            <IngredientResults ingredients={results} />
+            <IngredientResults ingredients={results} speakingEnabled={speakingEnabled} />
             <div className="flex justify-center">
               <Button 
                 variant="outline" 
