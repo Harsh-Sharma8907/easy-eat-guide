@@ -1,11 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Leaf, Loader2 } from 'lucide-react';
 import { ImageUpload } from '@/components/ImageUpload';
 import { IngredientResults, Ingredient } from '@/components/IngredientResults';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { SpeakingToggle } from '@/components/SpeakingToggle';
+import { UserMenu } from '@/components/UserMenu';
+import { UsageLimitBanner } from '@/components/UsageLimitBanner';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/hooks/useAuth';
+import { useUsageLimit } from '@/hooks/useUsageLimit';
 import { supabase } from '@/integrations/supabase/client';
 
 const Index = () => {
@@ -13,10 +18,29 @@ const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [results, setResults] = useState<Ingredient[] | null>(null);
   const [speakingEnabled, setSpeakingEnabled] = useState(true);
+  
   const { toast } = useToast();
+  const { user, loading: authLoading } = useAuth();
+  const { canAnalyze, usageCount, isPremium, loading: usageLoading, recordUsage, dailyLimit } = useUsageLimit();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate('/auth');
+    }
+  }, [user, authLoading, navigate]);
 
   const analyzeIngredients = async () => {
     if (!selectedImage) return;
+
+    if (!canAnalyze) {
+      toast({
+        title: 'Daily Limit Reached',
+        description: 'Upgrade to premium for unlimited analyses.',
+        variant: 'destructive',
+      });
+      return;
+    }
 
     setIsAnalyzing(true);
     setResults(null);
@@ -33,6 +57,9 @@ const Index = () => {
           });
 
           if (error) throw error;
+
+          // Record usage on successful analysis
+          await recordUsage();
 
           setResults(data.ingredients);
           toast({
@@ -67,6 +94,16 @@ const Index = () => {
     setResults(null);
   };
 
+  if (authLoading || usageLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-hero flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!user) return null;
+
   return (
     <div className="min-h-screen bg-gradient-hero animate-fade-in">
       {/* Header */}
@@ -83,6 +120,7 @@ const Index = () => {
                 onToggle={() => setSpeakingEnabled(!speakingEnabled)} 
               />
               <ThemeToggle />
+              <UserMenu />
             </div>
           </div>
         </div>
@@ -90,6 +128,16 @@ const Index = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
+        {/* Usage Banner */}
+        <div className="mb-6">
+          <UsageLimitBanner 
+            usageCount={usageCount} 
+            dailyLimit={dailyLimit} 
+            isPremium={isPremium} 
+            canAnalyze={canAnalyze} 
+          />
+        </div>
+
         {!results ? (
           <div className="space-y-8 animate-fade-in">
             {/* Hero Section */}
@@ -117,7 +165,7 @@ const Index = () => {
                   variant="hero"
                   size="lg"
                   onClick={analyzeIngredients}
-                  disabled={isAnalyzing}
+                  disabled={isAnalyzing || !canAnalyze}
                   className="min-w-[200px] shadow-elegant hover-scale"
                 >
                   {isAnalyzing ? (
