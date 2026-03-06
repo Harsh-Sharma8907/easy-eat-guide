@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/hooks/useAuth';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { z } from 'zod';
+import { ForgotPasswordDialog } from '@/components/ForgotPasswordDialog';
 
 const authSchema = z.object({
   email: z.string().email('Please enter a valid email'),
@@ -186,6 +187,12 @@ const Auth = () => {
                 )}
               </Button>
             </form>
+
+            {isLogin && (
+              <div className="mt-4 text-center">
+                <ForgotPasswordDialog />
+              </div>
+            )}
 
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
