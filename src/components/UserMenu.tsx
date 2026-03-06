@@ -1,4 +1,5 @@
-import { LogOut, User, Crown } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { LogOut, User, Crown, LayoutDashboard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import { useUsageLimit } from '@/hooks/useUsageLimit';
 export function UserMenu() {
   const { user, signOut } = useAuth();
   const { isPremium, usageCount, dailyLimit } = useUsageLimit();
+  const navigate = useNavigate();
 
   if (!user) return null;
 
@@ -43,6 +45,10 @@ export function UserMenu() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => navigate('/dashboard')} className="cursor-pointer">
+          <LayoutDashboard className="mr-2 h-4 w-4" />
+          Dashboard
+        </DropdownMenuItem>
         {!isPremium && (
           <>
             <DropdownMenuItem className="cursor-pointer text-primary">
